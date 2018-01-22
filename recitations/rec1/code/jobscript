@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #SBATCH -n 1
-#SBATCH -p normal
+#SBATCH -p compute
 #SBATCH -t 00:01:00
 #SBATCH -J Blas_job
 #SBATCH -o MyOutputFile.%j.out
