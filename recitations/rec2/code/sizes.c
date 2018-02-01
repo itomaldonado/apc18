@@ -11,7 +11,22 @@ int main() {
 
   // Here's how to show the size of one type. See if you can define a macro
   // to avoid copy pasting this code.
+
   printf("size of %s : %zu bytes \n", "int", sizeof(int));
+  printf("size of %s : %zu bytes \n", "short", sizeof(short));
+  printf("size of %s : %zu bytes \n", "long", sizeof(long));
+  printf("size of %s : %zu bytes \n", "char", sizeof(char));
+  printf("size of %s : %zu bytes \n", "float", sizeof(float));
+  printf("size of %s : %zu bytes \n", "double", sizeof(double));
+  printf("size of %s : %zu bytes \n", "unsigned int", sizeof(unsigned int));
+  printf("size of %s : %zu bytes \n", "long long", sizeof(long long));
+  printf("size of %s : %zu bytes \n", "uint8_t", sizeof(uint8_t));
+  printf("size of %s : %zu bytes \n", "int16_t", sizeof(int16_t));
+  printf("size of %s : %zu bytes \n", "int32_t", sizeof(int32_t));
+  printf("size of %s : %zu bytes \n", "uint64_t", sizeof(uint64_t));
+
+
+
   // e.g. PRINT_SIZE("int", int);
   //      PRINT_SIZE("short", short);
 

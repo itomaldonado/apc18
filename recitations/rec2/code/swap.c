@@ -4,16 +4,19 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-void swap(int i, int j) {
-  i ^= j;
-  j ^= i;
-  i ^= j;
+#define swap2(i, j) (i^=j^=i^=j)
+
+void swap(int *i, int *j) {
+  *i ^= *j;
+  *j ^= *i;
+  *i ^= *j;
 }
 
 int main() {
   int k = 1;
   int m = 2;
-  swap(k, m);
+  swap(&k, &m);
+  //swap2(k, m);
   // What would be the value of k and m printed below?
   printf("k = %d, m = %d\n", k, m);
 
