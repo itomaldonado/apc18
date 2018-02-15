@@ -38,8 +38,8 @@ int main(int argc, char **argv)
 
  /*Calculate pi here*/
   for (i = 0; i < intervals; i++) {
-    double step = i * 1.0 + 0.5;
-    sum += 4.0 / (1.0 + pow(step, 2.0));
+    x = (i + 0.5) * dx;
+    sum += (4.0) / (1.0 + pow(x, 2.0));
   }
 
   pi = dx*sum;
