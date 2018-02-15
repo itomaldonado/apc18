@@ -49,6 +49,11 @@ int main(int argc, char **argv)
       c[i][j] = 0.0;
     }
 
+  for (i=0; i<n; i++)
+    for (k=0; k<n; k++)
+      for (j=0; j<n; j++)
+        check[i][j] += a[i][k]*b[k][j];
+
   gettimeofday(&start, NULL);
 #pragma omp parallel for private(i,k,j) shared(a,b,c,n)
   for (i=0; i<n; i++)
@@ -58,12 +63,7 @@ int main(int argc, char **argv)
 
   gettimeofday(&end, NULL);
 
-  // Check for correctness
-  for (i=0; i<n; i++)
-    for (k=0; k<n; k++)
-      for (j=0; j<n; j++)
-        check[i][j] += a[i][k]*b[k][j];
-
+  // Check for correctedness
   for(i = 0; i < n; i++)
     for(j = 0; j < n; j++)
       if(abs(check[i][j] - c[i][j]) > EPS ) {
