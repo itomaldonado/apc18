@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 
  /*Calculate pi here*/
   for (i = 1; i <= intervals; i++) {
-  .......
+    sum += (4 / 1 + ((i-1) * (i-1)));
   }
 
   pi = dx*sum;
