@@ -38,11 +38,9 @@ int main(int argc, char **argv)
 
  /*Calculate pi here*/
 #pragma omp parallel for private(i,x) shared(sum, dx) reduction(+:sum) 
-  {
-    for (i = 0; i < intervals; i++) {
-      x = (i + 0.5) * dx;
-      sum += (4.0) / (1.0 + pow(x, 2.0));
-    }
+  for (i = 0; i < intervals; i++) {
+    x = (i + 0.5) * dx;
+    sum += (4.0) / (1.0 + pow(x, 2.0));
   }
 
   pi = dx*sum;
