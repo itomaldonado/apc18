@@ -1,7 +1,4 @@
-# CC := gcc
-# export TAU_MAKEFILE=/opt/tau/intel/openmpi_ib/x86_64/lib/Makefile.tau-icpc-papi-pdt
-# export TAU_OPTIONS="-optVerbose -optPreProcess"
-CC := /opt/tau/intel/openmpi_ib/x86_64/bin/tau_cc.sh
+CC := gcc
 
 ifeq ($(DEBUG),1)
 	CFLAGS := -Wall -O0 -g
