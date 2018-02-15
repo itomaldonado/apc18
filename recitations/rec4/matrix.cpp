@@ -4,6 +4,7 @@
 #include <assert.h>
 #include "time.h"
 #include <sys/time.h>
+#include <float.h>  // For: DBL_EPSILON
 
 #ifdef _OPENMP 
 #include<omp.h> 
@@ -66,7 +67,7 @@ int main(int argc, char **argv)
   // Check for correctedness
   for(i = 0; i < n; i++)
     for(j = 0; j < n; j++)
-      if(abs(check[i][j] - c[i][j]) > EPS ) {
+      if(abs(check[i][j] - c[i][j]) > n*DBL_EPSILON ) {
         printf("Calculated matrix is incorrect...");
         return -1;
       }
