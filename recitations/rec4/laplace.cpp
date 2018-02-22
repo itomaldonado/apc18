@@ -41,7 +41,7 @@ int main() {
   {
     
     #pragma omp single nowait
-    for (k=1; k<=n; i++) {
+    for (k=1; k<=n; k++) {
       T[(n+1)*n2+k] = k * top / (n+1);
       Tnew[(n+1)*n2+k] = k * top / (n+1);
       
