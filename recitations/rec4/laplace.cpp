@@ -44,7 +44,7 @@ int main() {
   }
 
   // set boundary conditions
-  #pragma omp parallel private(i,j,k,Tmp) shared(iter,tol,maxIter,n,n2,T,Tnew) reduction(max:var)
+  #pragma omp parallel private(i,j,k,Tmp) shared(iter,tol,maxIter,n,n2,T,Tnew) //reduction(max:var)
   {
     
     #pragma omp single nowait
@@ -78,8 +78,11 @@ int main() {
       #pragma omp barrier
       Tmp=T; T=Tnew; Tnew=Tmp;
 
-      if (iter%100 == 0)
-        printf("iter: %8u, variation = %12.4lE\n", iter, var);
+      #pragma omp single nowait
+      {
+        if (iter%100 == 0)
+          printf("iter: %8u, variation = %12.4lE\n", iter, var);
+      }
     }
   }
 
