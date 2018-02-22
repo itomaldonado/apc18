@@ -46,7 +46,7 @@ int main() {
     Tnew[i*n2+n+1] = i * top / (n+1);
   }
 
-#pragma opm parallel private(i,j) shared(n,n2,Tnew,T, var)
+#pragma omp parallel shared(i,j,n,n2,Tnew,T, var)
   {
     while(var > tol && iter <= maxIter) {
       ++iter;
