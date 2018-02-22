@@ -59,7 +59,6 @@ int main() {
     }
 
     while(var > tol && iter <= maxIter) {
-      
       // single one increases iteration
       #pragma omp single
       {
@@ -76,7 +75,11 @@ int main() {
       }
 
       #pragma omp barrier
-      Tmp=T; T=Tnew; Tnew=Tmp;
+
+      #pragma single
+      {
+        Tmp=T; T=Tnew; Tnew=Tmp;
+      }
 
       #pragma omp single nowait
       {
