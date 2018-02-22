@@ -76,7 +76,7 @@ int main() {
 
       #pragma omp barrier
 
-      #pragma single
+      #pragma omp single
       {
         Tmp=T; T=Tnew; Tnew=Tmp;
       }
