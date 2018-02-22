@@ -25,7 +25,11 @@ int main() {
     exit(-1);
     }*/
 
-  time_t startTime = clock();
+  #ifdef _OPENMP
+    double startTime = omp_get_wtime();
+  #else
+    time_t startTime = clock();
+  #endif
 
   n2 = n+2;
   T =(double *)calloc(n2*n2, sizeof(*T));
@@ -37,7 +41,7 @@ int main() {
   }
 
   // set boundary conditions
-  #pragma omp parallel
+  #pragma omp parallel private(i,j,k,Tmp) shared(iter,tol,maxIter,n,n2,T,Tnew) reduction(maxx:var)
   {
     
     #pragma omp single nowait
@@ -50,9 +54,12 @@ int main() {
     }
 
     while(var > tol && iter <= maxIter) {
+      
+      // single one increases iteration
+      #pragma omp single
       ++iter;
+
       var = 0.0;
-      //#pragma omp parallel for private(i,j) shared(n,n2,Tnew,T) reduction(max:var)
       for (i=1; i<=n; ++i) {
         for (j=1; j<=n; ++j) {
           Tnew[i*n2+j] = 0.25*( T[(i-1)*n2+j] + T[(i+1)*n2+j]
@@ -69,7 +76,13 @@ int main() {
     }
   }
 
-  double endTime = (clock() - startTime) / (double) CLOCKS_PER_SEC;
+  #ifdef _OPENMP
+    double endTime = omp_get_wtime() - startTime;
+  #else
+    double endTime = (clock() - startTime) / (double) CLOCKS_PER_SEC;
+  #endif
+
+  
 
   printf("Elapsed time (s) = %.2lf\n", endTime);
   printf("Mesh size: %u\n", n);
