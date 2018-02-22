@@ -48,19 +48,23 @@ int main() {
   {
     
     #pragma omp single nowait
-    for (k=1; k<=n; k++) {
-      T[(n+1)*n2+k] = k * top / (n+1);
-      Tnew[(n+1)*n2+k] = k * top / (n+1);
-      
-      T[k*n2+n+1] = k * top / (n+1);
-      Tnew[k*n2+n+1] = k * top / (n+1);
+    {
+      for (k=1; k<=n; k++) {
+        T[(n+1)*n2+k] = k * top / (n+1);
+        Tnew[(n+1)*n2+k] = k * top / (n+1);
+        
+        T[k*n2+n+1] = k * top / (n+1);
+        Tnew[k*n2+n+1] = k * top / (n+1);
+      }
     }
 
     while(var > tol && iter <= maxIter) {
       
       // single one increases iteration
       #pragma omp single
-      ++iter;
+      {
+        ++iter;
+      }
 
       var = 0.0;
       for (i=1; i<=n; ++i) {
