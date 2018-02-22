@@ -44,10 +44,10 @@ int main() {
   }
 
   // set boundary conditions
-  #pragma omp parallel private(i,j,k,Tmp) shared(iter,tol,maxIter,n,n2,T,Tnew) reduction(max:var)
+  #pragma omp parallel
   {
     
-    #pragma omp single nowait
+    #pragma omp single
     {
       for (k=1; k<=n; k++) {
         T[(n+1)*n2+k] = k * top / (n+1);
@@ -58,14 +58,16 @@ int main() {
       }
     }
 
+    var = DBL_MAX;
     while(var > tol && iter <= maxIter) {
       // single one increases iteration
       #pragma omp single
       {
         ++iter;
+        var = 0.0;
       }
 
-      var = 0.0;
+      #pragma omp parallel for private(i) shared(n,n2,T,Tnew) reduction(max:var)
       for (i=1; i<=n; ++i) {
         for (j=1; j<=n; ++j) {
           Tnew[i*n2+j] = 0.25*( T[(i-1)*n2+j] + T[(i+1)*n2+j]
@@ -74,12 +76,10 @@ int main() {
         }
       }
 
-      #pragma omp barrier
-
       #pragma omp single nowait
       {
         Tmp=T; T=Tnew; Tnew=Tmp;
-        
+
         if (iter%100 == 0)
           printf("iter: %8u, variation = %12.4lE\n", iter, var);
       }
