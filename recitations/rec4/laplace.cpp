@@ -46,12 +46,12 @@ int main() {
     Tnew[i*n2+n+1] = i * top / (n+1);
   }
 
-//#pragma opm parallel
+#pragma opm parallel private(i,j) shared(n,n2,Tnew,T, var)
   {
     while(var > tol && iter <= maxIter) {
       ++iter;
       var = 0.0;
-      #pragma opm parallel for private(i,j) shared(n,n2,Tnew,T) reduction(max:var)
+      //#pragma omp parallel for private(i,j) shared(n,n2,Tnew,T) reduction(max:var)
       for (i=1; i<=n; ++i) {
         for (j=1; j<=n; ++j) {
           Tnew[i*n2+j] = 0.25*( T[(i-1)*n2+j] + T[(i+1)*n2+j]
@@ -59,7 +59,7 @@ int main() {
           var = MAX(var, fabs(Tnew[i*n2+j] - T[i*n2+j]));
         }
       }
-
+      #pragma omp barrier
       Tmp=T; T=Tnew; Tnew=Tmp;
 
       if (iter%100 == 0)
