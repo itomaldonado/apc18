@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 int main() {
 
@@ -41,7 +44,7 @@ int main() {
   }
 
   // set boundary conditions
-  #pragma omp parallel private(i,j,k,Tmp) shared(iter,tol,maxIter,n,n2,T,Tnew) reduction(maxx:var)
+  #pragma omp parallel private(i,j,k,Tmp) shared(iter,tol,maxIter,n,n2,T,Tnew) reduction(max:var)
   {
     
     #pragma omp single nowait
