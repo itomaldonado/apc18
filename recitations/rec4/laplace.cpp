@@ -76,13 +76,10 @@ int main() {
 
       #pragma omp barrier
 
-      #pragma omp single
-      {
-        Tmp=T; T=Tnew; Tnew=Tmp;
-      }
-
       #pragma omp single nowait
       {
+        Tmp=T; T=Tnew; Tnew=Tmp;
+        
         if (iter%100 == 0)
           printf("iter: %8u, variation = %12.4lE\n", iter, var);
       }
