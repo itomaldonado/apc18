@@ -44,30 +44,27 @@ int main() {
   }
 
   // set boundary conditions
-  #pragma omp parallel
-  {
     
-    #pragma omp single
-    {
-      for (k=1; k<=n; k++) {
-        T[(n+1)*n2+k] = k * top / (n+1);
-        Tnew[(n+1)*n2+k] = k * top / (n+1);
-        
-        T[k*n2+n+1] = k * top / (n+1);
-        Tnew[k*n2+n+1] = k * top / (n+1);
-      }
+    for (k=1; k<=n; k++) {
+      T[(n+1)*n2+k] = k * top / (n+1);
+      Tnew[(n+1)*n2+k] = k * top / (n+1);
+      
+      T[k*n2+n+1] = k * top / (n+1);
+      Tnew[k*n2+n+1] = k * top / (n+1);
     }
 
-    var = DBL_MAX;
+  #pragma omp parallel
+  {
     while(var > tol && iter <= maxIter) {
       // single one increases iteration
+      #pragma omp barrier
       #pragma omp single
       {
         ++iter;
         var = 0.0;
       }
 
-      #pragma omp parallel for private(i) shared(n,n2,T,Tnew) reduction(max:var)
+      #pragma omp for private(j) reduction(max:var)
       for (i=1; i<=n; ++i) {
         for (j=1; j<=n; ++j) {
           Tnew[i*n2+j] = 0.25*( T[(i-1)*n2+j] + T[(i+1)*n2+j]
