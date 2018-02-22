@@ -44,7 +44,7 @@ int main() {
   }
 
   // set boundary conditions
-  #pragma omp parallel private(i,j,k,Tmp) shared(iter,tol,maxIter,n,n2,T,Tnew) //reduction(max:var)
+  #pragma omp parallel private(i,j,k,Tmp) shared(iter,tol,maxIter,n,n2,T,Tnew,var) //reduction(max:var)
   {
     
     #pragma omp single nowait
