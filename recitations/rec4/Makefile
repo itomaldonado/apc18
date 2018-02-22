@@ -8,7 +8,7 @@ LIBS =
 # the -fopenmp parameter to compile with OpenMP support.
 # i.e. g++ -fopenmp helloworld.cpp -o helloworld 
 
-all: helloworld matrix pi
+all: helloworld matrix pi laplace
 
 
 helloworld.o: helloworld.cpp
@@ -28,6 +28,12 @@ pi.o: pi.cpp
 
 pi: pi.o
 	$(CC) -o pi $(OPENMP) pi.o
+
+laplace.o: laplace.cpp
+	$(CC) -c $(OPENMP) $(CFLAGS) laplace.cpp
+
+laplace: laplace.o
+	$(CC) -o laplace $(OPENMP) laplace.o
 
 clean:
 	rm -f *.o $(TARGETS) *.stdout *.txt
