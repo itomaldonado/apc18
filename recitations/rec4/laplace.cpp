@@ -11,7 +11,7 @@ int main() {
 
   double *T, *Tnew, *Tmp;
   double tol, var = DBL_MAX, top = 100.0;
-  unsigned n, n2, maxIter, i, j, iter = 0;
+  unsigned n, n2, maxIter, k, i, j, iter = 0;
   int itemsread;
   FILE *fout;
   n=1024;
@@ -37,17 +37,18 @@ int main() {
   }
 
   // set boundary conditions
-  //#pragma omp parallel for private(i) shared(n,n2,T,Tnew,top)
-  for (i=1; i<=n; i++) {
-    T[(n+1)*n2+i] = i * top / (n+1);
-    Tnew[(n+1)*n2+i] = i * top / (n+1);
-    
-    T[i*n2+n+1] = i * top / (n+1);
-    Tnew[i*n2+n+1] = i * top / (n+1);
-  }
-
-#pragma omp parallel shared(i,j,n,n2,Tnew,T, var)
+  #pragma omp parallel
   {
+    
+    #pragma omp single nowait
+    for (k=1; k<=n; i++) {
+      T[(n+1)*n2+k] = k * top / (n+1);
+      Tnew[(n+1)*n2+k] = k * top / (n+1);
+      
+      T[k*n2+n+1] = k * top / (n+1);
+      Tnew[k*n2+n+1] = k * top / (n+1);
+    }
+
     while(var > tol && iter <= maxIter) {
       ++iter;
       var = 0.0;
@@ -59,6 +60,7 @@ int main() {
           var = MAX(var, fabs(Tnew[i*n2+j] - T[i*n2+j]));
         }
       }
+
       #pragma omp barrier
       Tmp=T; T=Tnew; Tnew=Tmp;
 
