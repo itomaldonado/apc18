@@ -10,7 +10,6 @@ int main(int argc, char* argv[]){
   MPI_Init(&argc, &argv) ;
 
   /* Write MPI Code Here */
-  MPI_Init( &argc, &argv );
   MPI_Comm_rank( MPI_COMM_WORLD, &me ); 
   MPI_Comm_size( MPI_COMM_WORLD, &nprocs ); 
   printf("hello world, I am task %d from total %d\n", me, nprocs );
