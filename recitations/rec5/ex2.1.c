@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     left = (me - 1 + nprocs) % nprocs;
     /* Sendrecv data */
     MPI_Recv(b, ndata, MPI_REAL, left, 0, MPI_COMM_WORLD, &status);
-    MPI_send(a, ndata, MPI_REAL, right, 0, MPI_COMM_WORLD, &request);
+    MPI_Send(a, ndata, MPI_REAL, right, 0, MPI_COMM_WORLD, &request);
 
     printf("\tI am task %d and I have received b(0) = %1.2f \n", me, b[0]);
 
