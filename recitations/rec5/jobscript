@@ -7,4 +7,4 @@
 #SBATCH -t 00:01:00
 
 
-ibrun --npernode 4 ./ex1
+srun --ntasks-per-node=4 ./ex1
