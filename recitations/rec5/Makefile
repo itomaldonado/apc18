@@ -1,7 +1,7 @@
 CC = icpc
 MPCC = mpicc
 OPENMP = -openmp
-CFLAGS = -Wall -O3
+CFLAGS = -O3
 LIBS =
 
 all: ex1 ex2.1 ex2.2 ex3 ex4
