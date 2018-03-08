@@ -3,7 +3,7 @@
 #SBATCH -o helloworld.stdout
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=28
-#SBATCH -p RM-small
+#SBATCH -p RM
 #SBATCH -t 00:01:00
 
 mpirun -np 4 ./ex1

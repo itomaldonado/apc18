@@ -29,8 +29,8 @@ int main(int argc, char *argv[])
     right = (me + 1) % nprocs;
     left = (me - 1 + nprocs) % nprocs;
     /* Sendrecv data */
-    MPI_Recv(b, ndata, MPI_REAL, left, 0, MPI_COMM_WORLD);
-    MPI_Send(a, ndata, MPI_REAL, right, 0, MPI_COMM_WORLD, &request);
+    MPI_Recv(b, ndata, MPI_REAL, left, 0, MPI_COMM_WORLD, &status);
+    MPI_Send(a, ndata, MPI_REAL, right, 0, MPI_COMM_WORLD);
 
     printf("\tI am task %d and I have received b(0) = %1.2f \n", me, b[0]);
 
