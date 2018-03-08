@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     }
 
     // get the offsets of each rank
-    sum = 0
+    sum = 0;
     for (i = 0; i < num_procs; i++) {
         offsets[i] = sum;
         sum += counts[i];
