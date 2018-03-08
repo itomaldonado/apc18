@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 
     int me, nprocs, i = 0, left, right;
     MPI_Status status;
-    MPI_Request request;
+    //MPI_Request request;
 
     float a[ndata];
     float b[ndata];
