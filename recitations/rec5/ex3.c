@@ -6,7 +6,8 @@
 
 int main(int argc, char *argv[])
 {
-    int i, my_id, num_procs, num_elem, sum;
+    int i, my_id, num_procs, sum;
+    //int num_elem;
     int array[N], array_final[N];
     int *array_recv, *offsets, *counts; 
 
@@ -56,7 +57,6 @@ int main(int argc, char *argv[])
     }
 
     // Gather data
-    int *sub_avgs = NULL;
     MPI_Gatherv(array_recv, counts[my_id], MPI_INT, &array_final, counts, offsets, MPI_INT, 0, MPI_COMM_WORLD);
     //MPI_Gather(array_recv, num_elem, MPI_INT, &array_final, num_elem, MPI_INT, 0, MPI_COMM_WORLD);
 
