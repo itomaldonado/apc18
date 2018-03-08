@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 
     int me, nprocs, i = 0, left, right;
     MPI_Status status;
-    //MPI_Request request;
+    MPI_Request request;
 
     float a[ndata];
     float b[ndata];
@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
     MPI_Comm_rank(MPI_COMM_WORLD, &me);
 
     /* Initialize data */
+   
     for (i = 0; i < ndata; ++i)
     {
         a[i] = me;
@@ -28,17 +29,24 @@ int main(int argc, char *argv[])
     /* Compute neighbour ranks */
     right = (me + 1) % nprocs;
     left = (me - 1 + nprocs) % nprocs;
-    
-    /* odd number ranks receive first, even number ranks send first: Sendrecv data */
-    if (me % 2) {
-        MPI_Recv(b, ndata, MPI_REAL, left, 0, MPI_COMM_WORLD, &status);
-        MPI_Send(a, ndata, MPI_REAL, right, 0, MPI_COMM_WORLD);
-    } else {
-        MPI_Send(a, ndata, MPI_REAL, right, 0, MPI_COMM_WORLD);
-        MPI_Recv(b, ndata, MPI_REAL, left, 0, MPI_COMM_WORLD, &status);
-    }
-
+    /* Sendrecv data */
+   
+    if (me != 0) {
+    MPI_Recv(b, ndata, MPI_REAL, left, 0, MPI_COMM_WORLD, &status);
     printf("\tI am task %d and I have received b(0) = %1.2f \n", me, b[0]);
+    
+    } else{
+
+    printf("skipped rank 0"); 
+    }
+    MPI_Send(a, ndata, MPI_REAL, right, 0, MPI_COMM_WORLD);
+     
+
+    if (me == 0) {
+    MPI_Recv(b, ndata, MPI_REAL, left, 0, MPI_COMM_WORLD, &status);
+    printf("\tI am task %d and I have received b(0) = %1.2f \n", me, b[0]);
+  
+    }
 
     MPI_Finalize();
     return 0;
