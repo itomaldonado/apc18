@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     int *myray, *send_ray, *back_ray;
     int array[N];
     int count;
-    int size, mysize, i, k, j, total, gtotal;
+    int size, mysize, i, k, j, total, gtotal, sum;
     int *array_recv, *offsets, *counts;
 
     mpi_err = MPI_Init(&argc, &argv);
