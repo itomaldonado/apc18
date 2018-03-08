@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     right = (me + 1) % nprocs;
     left = (me - 1 + nprocs) % nprocs;
     
-    /* Even number ranks send first, odd number ranks receive first: Sendrecv data */
+    /* odd number ranks receive first, even number ranks send first: Sendrecv data */
     if (me % 2) {
         MPI_Recv(b, ndata, MPI_REAL, left, 0, MPI_COMM_WORLD, &status);
         MPI_Send(a, ndata, MPI_REAL, right, 0, MPI_COMM_WORLD);
