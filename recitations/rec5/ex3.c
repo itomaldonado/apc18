@@ -6,7 +6,7 @@
 
 int main(int argc, char *argv[])
 {
-    int i, my_id, num_procs, num_elem, stride, sum;
+    int i, my_id, num_procs, num_elem, sum;
     int array[N], array_final[N];
     int *array_recv, *offsets, *counts; 
 
@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     MPI_Comm_size(MPI_COMM_WORLD, &num_procs); /* get number of processes */
 
     // Write the code to complete the exercise below.
-    num_elem = (N / num_procs);
+    //num_elem = (N / num_procs);
 
     // Only root does this
     if (my_id == 0) { 

@@ -8,6 +8,9 @@ int numnodes, myid, mpi_err;
 /* each processor will get COUNT elements from the root */
 #define COUNT 10
 
+/* Number of elements */
+#define N 60
+
 /*
 ! This program shows how to use MPI_Scatter and MPI_Reduce
 ! Each processor gets different data from the root processor
@@ -17,14 +20,71 @@ int numnodes, myid, mpi_err;
 */
 int main(int argc, char *argv[])
 {
-  int *myray, *send_ray, *back_ray;
-  int count;
-  int size, mysize, i, k, j, total, gtotal;
-  mpi_err = MPI_Init(argc, argv);
-  mpi_err = MPI_Comm_size(MPI_COMM_WORLD, &numnodes);
-  mpi_err = MPI_Comm_rank(MPI_COMM_WORLD, &myid);
+    int *myray, *send_ray, *back_ray;
+    int array[N];
+    int count;
+    int size, mysize, i, k, j, total, gtotal;
+    int *array_recv, *offsets, *counts; 
+    mpi_err = MPI_Init(argc, argv);
+    mpi_err = MPI_Comm_size(MPI_COMM_WORLD, &numnodes);
+    mpi_err = MPI_Comm_rank(MPI_COMM_WORLD, &myid);
+
+    // Only root does this
+    if (myid == 0) { 
+        
+        // initialize array:
+        for(i = 0; i < N; i++) {
+            array[i] = i;
+        }
+    }
+
+    // Scatter array
+    offsets = (int *)malloc(num_procs*sizeof(int));
+    counts = (int *)malloc(num_procs*sizeof(int));
+
+    // get counts for each rank
+    for (i=0; i < num_procs; ++i) { 
+        counts[i] = N / num_procs;
+    }
+    for (i = 0; i < N % num_procs; i++){
+        // add one to each rank until we use the reminder
+        counts[i] += 1;
+    }
+
+    // get the offsets of each rank
+    sum = 0;
+    for (i = 0; i < num_procs; i++) {
+        offsets[i] = sum;
+        sum += counts[i];
+    }
+
+    array_recv = (int *)malloc(sizeof(int) * counts[myid]);
+    MPI_Scatterv(&array, counts, offsets, MPI_INT, array_recv, counts[myid], MPI_INT, 0, MPI_COMM_WORLD);
 
 
-  mpi_err = MPI_Finalize();
-  return 0;
+    // Overwrite array with rank id
+    total = 0;
+    for(i = 0; i < counts[myid]; i++) {
+        total += array_recv[i];
+    }
+
+    printf("Rank: %d -- Local sum total: %d.\n", myid, total);
+
+    // Reduce all of the local sums into the global sum
+    MPI_Reduce(&total, &gtotal, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+
+
+    if (myid == 0) {
+        printf("Global sum total: %d.\n", gtotal);
+    }
+
+    // clean up
+    free(array_recv);
+    free(offsets);
+    free(counts);
+
+    // finalize
+    MPI_Barrier(MPI_COMM_WORLD);
+    mpi_err = MPI_Finalize();
+    return 0;
 }
