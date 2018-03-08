@@ -24,8 +24,9 @@ int main(int argc, char *argv[])
     int array[N];
     int count;
     int size, mysize, i, k, j, total, gtotal;
-    int *array_recv, *offsets, *counts; 
-    mpi_err = MPI_Init(argc, argv);
+    int *array_recv, *offsets, *counts;
+
+    mpi_err = MPI_Init(&argc, &argv);
     mpi_err = MPI_Comm_size(MPI_COMM_WORLD, &numnodes);
     mpi_err = MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 
@@ -39,21 +40,21 @@ int main(int argc, char *argv[])
     }
 
     // Scatter array
-    offsets = (int *)malloc(num_procs*sizeof(int));
-    counts = (int *)malloc(num_procs*sizeof(int));
+    offsets = (int *)malloc(numnodes*sizeof(int));
+    counts = (int *)malloc(numnodes*sizeof(int));
 
     // get counts for each rank
-    for (i=0; i < num_procs; ++i) { 
-        counts[i] = N / num_procs;
+    for (i=0; i < numnodes; ++i) { 
+        counts[i] = N / numnodes;
     }
-    for (i = 0; i < N % num_procs; i++){
+    for (i = 0; i < N % numnodes; i++){
         // add one to each rank until we use the reminder
         counts[i] += 1;
     }
 
     // get the offsets of each rank
     sum = 0;
-    for (i = 0; i < num_procs; i++) {
+    for (i = 0; i < numnodes; i++) {
         offsets[i] = sum;
         sum += counts[i];
     }
