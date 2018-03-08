@@ -21,7 +21,7 @@ int numnodes, myid, mpi_err;
 int main(int argc, char *argv[])
 {
     int array[N];
-    int size, i, total, gtotal, sum;
+    int i, total, gtotal, sum;
     int *array_recv, *offsets, *counts;
 
     mpi_err = MPI_Init(&argc, &argv);
