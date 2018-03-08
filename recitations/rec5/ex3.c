@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 
     if (my_id == 0) {
         for(i = 0; i < N;i++) {
-            printf("Value %d was processed by rank %d", i, array_final[i]);
+            printf("Value %d was processed by rank %d\n", i, array_final[i]);
         }
     }
 
