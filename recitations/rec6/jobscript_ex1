@@ -1,0 +1,14 @@
+#!/bin/bash
+#SBATCH -J ex1
+#SBATCH -o cuda.stdout
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node 4
+#SBATCH --gres=gpu:k80:1
+#SBATCH -p GPU-shared
+#SBATCH -t 00:05:00
+
+set -x
+
+nvprof ./ex1
+
+nvprof --export-profile ex1.nvvp  ./ex1
