@@ -6,28 +6,30 @@
 // using a TILE_DIM x BLOCK_ROWS thread block, so that each thread
 // transposes TILE_DIM/BLOCK_ROWS elements.
 // TILE_DIM must be an integral multiple of BLOCK_ROWS
+#define SIZE 10016
 #define TILE_DIM 32
 #define BLOCK_ROWS 8
 
 
 __global__ void cuTranspose(int rows, int cols, const float *input, float *output) {
 
-  //int x = blockIdx.x * TILE_DIM + threadIdx.x;
-  //int y = blockIdx.y * TILE_DIM + threadIdx.y;
-  //int width = gridDim.x * TILE_DIM;
-
-  int tile_size = blockDim.x ;
-  int column = tile_size * blockIdx.x + threadIdx.x;
-  int row = tile_size * blockIdx.y + threadIdx.y;
-  if(column < cols && row < rows){
-    output[column*cols + row] = input[column + row*rows];
+  __shared__ float tile[TILE_DIM][TILE_DIM];
+  
+  int x = blockIdx.x * TILE_DIM + threadIdx.x;
+  int y = blockIdx.y * TILE_DIM + threadIdx.y;
+  int index_in = x + (y)*rows;
+  x = blockIdx.y * TILE_DIM + threadIdx.x;
+  y = blockIdx.x * TILE_DIM + threadIdx.y;
+  int index_out = x + (y)*cols;
+  
+  for (int i=0; i < TILE_DIM; i += BLOCK_ROWS) {
+    tile[threadIdx.y+i][threadIdx.x] = input[index_in+i*rows];
   }
+  __syncthreads();
 
-  /*
-  for (int j = 0; j < TILE_DIM; j+= BLOCK_ROWS) {
-    output[x*width + (y+j)] = input[(y+j)*width + x];
+  for (int i=0; i < TILE_DIM; i += BLOCK_ROWS) {
+    output[index_out + i*cols] = tile[threadIdx.x][threadIdx.y + i];
   }
-  */
 
   return;
 }
@@ -46,9 +48,9 @@ int check(int nrows, int ncols, float* input, float* output) {
 
 int main(void)
 {
-  int r = 10000; // rows
-  int c = 10000;  // columns
-  int N = r*c;   // total matrix entries.
+  int r = SIZE;  // rows
+  int c = SIZE;  // columns
+  int N = r*c;    // total matrix entries.
 
   float *input, *output;
 
@@ -69,9 +71,7 @@ int main(void)
   }
 
   // Transpose the matrix
-  printf("Before\n");
   cuTranspose<<<dimGrid, dimBlock>>>(r, c, input, output);
-  printf("After\n");
 
   // Wait for GPU to finish before accessing on host
   cudaDeviceSynchronize();
